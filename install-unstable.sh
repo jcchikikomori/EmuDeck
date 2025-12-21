@@ -7,14 +7,20 @@ SUSE_DEPS=(steam jq zenity flatpak unzip bash libfuse2 git rsync whiptail python
 VOID_DEPS=(steam jq zenity flatpak unzip bash fuse git rsync whiptail python)
 GENTOO_DEPS=(app-misc/jq gnome-extra/zenity sys-apps/flatpak app-arch/unzip app-shells/bash sys-fs/fuse:0 dev-vcs/git net-misc/rsync dev-libs/newt dev-lang/python app-text/xmlstarlet)
 
-linuxID=$(lsb_release -si)
+OS_NAME=$(grep ^NAME= /etc/os-release | cut -d'"' -f2)
+if [ "$OS_NAME" = "Playnix OS" ]; then
+    linuxID="PlaynixOS"
+else
+    linuxID=$(lsb_release -si)
+fi
+
 sandbox=""
 
 if [ "$linuxID" = "Ubuntu" ]; then
     sandbox="--no-sandbox"
 fi
 
-if [ "$linuxID" == "SteamOS" ]; then
+if [ "$linuxID" == "SteamOS" ] || [ "$linuxID" == "PlaynixOS" ]; then
     echo "installing EmuDeck"
 else
     zenityAvailable=$(command -v zenity &> /dev/null  && echo true)
